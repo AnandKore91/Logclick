@@ -12,7 +12,7 @@
 		0C1B9EDD1FA0A01C00C8A9A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C1B9EDB1FA0A01C00C8A9A2 /* Main.storyboard */; };
 		0C1B9EDF1FA0A01C00C8A9A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C1B9EDE1FA0A01C00C8A9A2 /* Assets.xcassets */; };
 		0C1B9EE21FA0A01C00C8A9A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C1B9EE01FA0A01C00C8A9A2 /* LaunchScreen.storyboard */; };
-		0C1B9EEA1FA0A0B200C8A9A2 /* AKLogClickManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1B9EE91FA0A0B200C8A9A2 /* AKLogClickManager.swift */; };
+		0C1B9EEA1FA0A0B200C8A9A2 /* LogClicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1B9EE91FA0A0B200C8A9A2 /* LogClicker.swift */; };
 		0C1CF57A1FA1B7F20051E8BA /* AKLogClickExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1CF5791FA1B7F20051E8BA /* AKLogClickExtensions.swift */; };
 		0CBA0807214688B50058C4F5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0CBA0806214688B50058C4F5 /* README.md */; };
 		0CBA0809214689830058C4F5 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CBA0808214689830058C4F5 /* Default-568h@2x.png */; };
@@ -27,7 +27,7 @@
 		0C1B9EDE1FA0A01C00C8A9A2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0C1B9EE11FA0A01C00C8A9A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0C1B9EE31FA0A01C00C8A9A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0C1B9EE91FA0A0B200C8A9A2 /* AKLogClickManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AKLogClickManager.swift; sourceTree = "<group>"; };
+		0C1B9EE91FA0A0B200C8A9A2 /* LogClicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogClicker.swift; sourceTree = "<group>"; };
 		0C1CF5791FA1B7F20051E8BA /* AKLogClickExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AKLogClickExtensions.swift; sourceTree = "<group>"; };
 		0CBA0806214688B50058C4F5 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		0CBA0808214689830058C4F5 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -68,7 +68,7 @@
 			children = (
 				0CBA0806214688B50058C4F5 /* README.md */,
 				0CBA080A21468A6A0058C4F5 /* Roadmap.md */,
-				0C1B9EE91FA0A0B200C8A9A2 /* AKLogClickManager.swift */,
+				0C1B9EE91FA0A0B200C8A9A2 /* LogClicker.swift */,
 				0CBA08052146888A0058C4F5 /* Extentions */,
 			);
 			path = AKLogClick;
@@ -181,7 +181,7 @@
 				0C1B9EDA1FA0A01C00C8A9A2 /* ViewController.swift in Sources */,
 				0C1CF57A1FA1B7F20051E8BA /* AKLogClickExtensions.swift in Sources */,
 				0C1B9ED81FA0A01C00C8A9A2 /* AppDelegate.swift in Sources */,
-				0C1B9EEA1FA0A0B200C8A9A2 /* AKLogClickManager.swift in Sources */,
+				0C1B9EEA1FA0A0B200C8A9A2 /* LogClicker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

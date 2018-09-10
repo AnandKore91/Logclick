@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+//MARK:- UIDevice
 extension UIDevice
 {
     class func getIP()-> String?
@@ -42,7 +43,7 @@ extension UIDevice
 }
 
 
-//MARK: Date ex
+//MARK:- Date ex
 extension Date
 {
     func toString() -> String

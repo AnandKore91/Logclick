@@ -6,68 +6,6 @@
 //  Copyright © 2017 Anand Kore. All rights reserved.
 //
 
-/* ----------- //
- || VARIABLES ||
- - PROJECT_NAME
- - BUNDLE_ID
- - PROJECT_VERSION
- - PROJECT_BUILD_NUMBER
- - DEVICE_NAME
- - OS_VERSION
- - IP_ADDRESS
- - ACCESS_TOKEN
- - printLogsInConsole:BOOL
- 
- || FUNCTIONS ||
- + initWithProjectName:version:accessToken:environment:printLogsInConsole
- 
- + infoWithMessage:
- + warningWithMessage:level:priority:userInfo
- + errorWithMessage:level:prority:userInfo
- + exceptionWithMessage:level:priority:userInfo
- 
- + syncReport
- + getReport
- + printReportInConsole
- 
- + clearAllLogs
- + clearLogsFromDate:toDate
- 
- --- Constants ---
- || LOG_TYPE ||
- - Info
- - Warning
- - Error
- - Exception
- 
- || LEVEL ||
- - trivial
- - Normal
- - Minor
- - Major
- - Critical
- - Blocker
- 
- || PRIORITY ||
- - P1
- - P2
- - P3
- - P4
- - P5
- 
- || ENVIRONMENT ||
- - Developement
- - Testing
- - Production
- 
- || OCCURRENCES ||
- - FirstSeen
- - LastSeen
- - TotalOccurrences
- - UniqueIPsAffected
- 
- //------------- */
-
 /*
  || ITEMS Table ||
  - ITEM     //--- Unique Log Messages
@@ -132,7 +70,7 @@ enum IssuePriority
 //MARK:- Log Functions
 func LogClick(infoWithMessage message:String,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
-    if AKLogClickManager.printLogsInConsole == true
+    if LogClicker.shared.printLogsInConsole == true
     {
         #if DEBUG
             print("\(Date().toString()) AKLogClick :\(LogType.tInfo.rawValue)[\(fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!)]:\(line) \(column) \(funcName) -> \(message)")
@@ -163,32 +101,38 @@ func LogClick(exceptionWithMessage message:String,level:IssueLevel = IssueLevel.
 
 
 //MARK:- Class AKLogClickManager
-class AKLogClickManager
+public class LogClicker
 {
-    //MARK: Variables
-    /*
-     static let PROJECT_NAME:String = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String
-    let BUNDLE_ID:String = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as! String
-    let PROJECT_VERSION:String  = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-    let PROJECT_BUILD_NUMBER:String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
-    let DEVICE_NAME:String = UIDevice.current.model
-    let OS_VERSION:String = UIDevice.current.systemVersion
-    let OS_NAME:String = UIDevice.current.systemName
-    var IP_ADDRESS:String = UIDevice.getIP()!
-    let ACCESS_TOKEN:String = ""
-    var printLogsInConsole:Bool = true
+    //MARK: Public Variables
+    public static let shared:LogClicker = LogClicker()
+    public var printLogsInConsole:Bool = false
+    public var saveLogsIntoFile:Bool = true
     
-    + initWithProjectName:version:accessToken:environment:printLogsInConsole
-
-     + syncReport
-    + getReport
-    + printReportInConsole
+    //MARK: Private Variables
+    private let projectName:String?
+    private let bundleID:String?
+    private let projectVersion:String?
+    private let projectBuildNumber:String?
+    private let deviceName:String?
+    private let osVersion:String?
+    private let osName:String?
+    private let deviceIPAdrress:String?
+    private let accessToken:String?
     
-    + clearAllLogs
-    + clearLogsFromDate:toDate
-    */
     
-    static var printLogsInConsole:Bool = false
+    init() {
+        self.projectName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String
+        self.bundleID = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as? String
+        self.projectVersion  = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        self.projectBuildNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+        self.deviceName = UIDevice.current.model
+        self.osVersion = UIDevice.current.systemVersion
+        self.osName = UIDevice.current.systemName
+        self.deviceIPAdrress = UIDevice.getIP()!
+        self.accessToken = ""
+        
+    }
+    
     
     class func setup()
     {
@@ -212,7 +156,7 @@ class AKLogClickManager
         print("\(Date().toString()) AKLogClick :OS_NAME ->\(OS_NAME)")
         print("\(Date().toString()) AKLogClick :IP_ADDRESS ->\(IP_ADDRESS)")
         print("\(Date().toString()) AKLogClick :ACCESS_TOKEN ->\(ACCESS_TOKEN)")
-        print("\(Date().toString()) AKLogClick :printLogsInConsole ->\(printLogsInConsole)")
+        print("\(Date().toString()) AKLogClick :printLogsInConsole ->\(LogClicker.shared.printLogsInConsole)")
     }
     
     class func addLogItem()

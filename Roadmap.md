@@ -50,10 +50,6 @@
 - P4
 - P5
 
-## Environment:
-- Developement
-- Testing
-- Production
 
 ## Filters:
 - FirstSeen

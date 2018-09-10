@@ -13,14 +13,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        LogClicker.setup()
-        
-        // Do any additional setup after loading the view, typically from a nib.
-        LogClick(infoWithMessage: "Anand")
-        LogClick(warningWithMessage: "Warning goes here.")
-        LogClick(errorWithMessage: "error occured.", level: .Blocker)
-        LogClick(errorWithMessage: "Error with level and priority.", level: .Major, priority: .P3)
-        LogClick(exceptionWithMessage: "Exception with level and priority.", level: .Blocker, priority: .P1)
+        LogClicker.shared.deviceInfo()
+    
+        LogClick(info: "This is informations log.")
+        LogClick(warning: "This is Warning log.")
+        LogClick(error: nil, message: "Error with optional error.")
+        LogClick(exception: nil, message: "This is exceptions log.")
+        LogClick(error: nil, message: "This is error with more details", level: .Major, priority: .P3)
+        LogClick(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)
     }
 
     override func didReceiveMemoryWarning() {

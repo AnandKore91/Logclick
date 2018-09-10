@@ -47,7 +47,7 @@ extension Date
 {
     func toString() -> String
     {
-        var dateFormat = "yyyy-MM-dd hh:mm:ss" // Use your own
+        var dateFormat = "yyyy-MM-dd hh:mm:ss"
         var dateFormatter: DateFormatter
         {
             let formatter = DateFormatter()
@@ -59,7 +59,4 @@ extension Date
         
         return dateFormatter.string(from: self as Date)
     }
-    
-    // 1. The date formatter
-    
 }

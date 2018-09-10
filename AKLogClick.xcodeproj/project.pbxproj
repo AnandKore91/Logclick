@@ -12,6 +12,8 @@
 		0C1B9EDD1FA0A01C00C8A9A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C1B9EDB1FA0A01C00C8A9A2 /* Main.storyboard */; };
 		0C1B9EDF1FA0A01C00C8A9A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C1B9EDE1FA0A01C00C8A9A2 /* Assets.xcassets */; };
 		0C1B9EE21FA0A01C00C8A9A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C1B9EE01FA0A01C00C8A9A2 /* LaunchScreen.storyboard */; };
+		0C1B9EEA1FA0A0B200C8A9A2 /* AKLogClickManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1B9EE91FA0A0B200C8A9A2 /* AKLogClickManager.swift */; };
+		0C1CF57A1FA1B7F20051E8BA /* AKLogClickExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1CF5791FA1B7F20051E8BA /* AKLogClickExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		0C1B9EDE1FA0A01C00C8A9A2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0C1B9EE11FA0A01C00C8A9A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0C1B9EE31FA0A01C00C8A9A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0C1B9EE91FA0A0B200C8A9A2 /* AKLogClickManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AKLogClickManager.swift; sourceTree = "<group>"; };
+		0C1CF5791FA1B7F20051E8BA /* AKLogClickExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AKLogClickExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,12 +60,22 @@
 			children = (
 				0C1B9ED71FA0A01C00C8A9A2 /* AppDelegate.swift */,
 				0C1B9ED91FA0A01C00C8A9A2 /* ViewController.swift */,
+				0C1B9EE91FA0A0B200C8A9A2 /* AKLogClickManager.swift */,
+				0C1CF5791FA1B7F20051E8BA /* AKLogClickExtensions.swift */,
+				0C1B9EEB1FA0A0BA00C8A9A2 /* Supporting Files */,
+			);
+			path = AKLogClick;
+			sourceTree = "<group>";
+		};
+		0C1B9EEB1FA0A0BA00C8A9A2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
 				0C1B9EDB1FA0A01C00C8A9A2 /* Main.storyboard */,
 				0C1B9EDE1FA0A01C00C8A9A2 /* Assets.xcassets */,
 				0C1B9EE01FA0A01C00C8A9A2 /* LaunchScreen.storyboard */,
 				0C1B9EE31FA0A01C00C8A9A2 /* Info.plist */,
 			);
-			path = AKLogClick;
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -91,7 +105,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Anand Kore";
 				TargetAttributes = {
 					0C1B9ED31FA0A01C00C8A9A2 = {
@@ -137,7 +151,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C1B9EDA1FA0A01C00C8A9A2 /* ViewController.swift in Sources */,
+				0C1CF57A1FA1B7F20051E8BA /* AKLogClickExtensions.swift in Sources */,
 				0C1B9ED81FA0A01C00C8A9A2 /* AppDelegate.swift in Sources */,
+				0C1B9EEA1FA0A0B200C8A9A2 /* AKLogClickManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,6 +193,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -184,6 +201,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -234,6 +252,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -241,6 +260,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -276,7 +296,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 285KN3UUR9;
-				INFOPLIST_FILE = AKLogClick/Info.plist;
+				INFOPLIST_FILE = "AKLogClick/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.anand.AKLogClick;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -291,7 +311,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 285KN3UUR9;
-				INFOPLIST_FILE = AKLogClick/Info.plist;
+				INFOPLIST_FILE = "AKLogClick/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.anand.AKLogClick;
 				PRODUCT_NAME = "$(TARGET_NAME)";

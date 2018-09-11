@@ -15,12 +15,12 @@ class ViewController: UIViewController {
         
         print(LogClicker.shared.deviceInfo())
     
-        LogClick(info: "This is informations log.")
-        LogClick(warning: "This is Warning log.")
-        LogClick(error: nil, message: "Error with optional error.")
-        LogClick(exception: nil, message: "This is exceptions log.")
-        LogClick(error: nil, message: "This is error with more details", level: .Major, priority: .P3)
-        LogClick(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)
+        Log(info: "This is informations log.")
+        Log(warning: "This is Warning log.")
+        Log(error: nil, message: "Error with optional error.")
+        Log(exception: nil, message: "This is exceptions log.")
+        Log(error: nil, message: "This is error with more details", level: .Major, priority: .P3)
+        Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)
     }
 
     override func didReceiveMemoryWarning() {

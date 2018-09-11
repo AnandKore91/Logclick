@@ -6,34 +6,12 @@
 //  Copyright © 2017 Anand Kore. All rights reserved.
 //
 
-/*
- || ITEMS Table ||
- ITEM     //--- Unique Log Messages
- DATE
- FIRST_SEEN
- LAST_SEEN
- TOTAL_OCCURRENCES
- IPs_AFFECTED
- LOG_TYPE
- LEVEL
- PRIORITY
- ENVIRONMENT
- PROJECT_NAME
- BUNDLE_ID
- PROJECT_VERSION
- PROJECT_BUILD_NUMBER
- DEVICE_NAME
- OS_VERSION
- IP_ADDRESS
- ACCESS_TOKEN
- */
-
 import UIKit
 import Foundation
 import FMDB
 
 //MARK:- Enums
-enum LogType: String
+public enum LogType: String
 {
     case tError = "[‼️]" // error
     case tInfo = "[ℹ️]" // info
@@ -41,59 +19,69 @@ enum LogType: String
     case tSevere = "[🔥]" // severe
 }
 
-enum LogEnvironment
+public enum LogEnvironment:String
 {
-    case Developement
-    case Testing
-    case Production
-    case Default
+    case Developement = "Developement"
+    case Testing = "Testing"
+    case Production = "Production"
+    case Default = "Default"
 }
 
-enum IssueLevel
+public enum IssueLevel:String
 {
-    case Trivial
-    case Normal
-    case Minor
-    case Major
-    case Critical
-    case Blocker
+    case Trivial = "Trivial"
+    case Normal = "Normal"
+    case Minor = "Minor"
+    case Major = "Major"
+    case Critical = "Critical"
+    case Blocker = "Blocker"
 }
 
-enum IssuePriority
+public enum IssuePriority:String
 {
-    case P1
-    case P2
-    case P3
-    case P4
-    case P5
+    case P1 = "P1"
+    case P2 = "P2"
+    case P3 = "P3"
+    case P4 = "P4"
+    case P5 = "P5"
+    case NoPriority = "No Priority"
+}
+
+public enum LogsStoreLocation:String
+{
+    case textFile = "textFile"
+    case database = "database"
+    case printOnly = "printOnly"
 }
 
 //MARK:- Log Functions
-func LogClick(info message:String,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
+func Log(info message:String,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-        LogClicker.shared.printLog("\(LogType.tInfo.rawValue)[\(fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!)]:\(line) \(column) \(funcName) -> \(message)")
+        LogClicker.shared.log(exception: nil, error: nil, type: LogType.tInfo.rawValue , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
     #endif
 }
 
-func LogClick(warning message:String, fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
+func Log(warning message:String, fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-        LogClicker.shared.printLog("\(LogType.tWarning.rawValue)[\(fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!)]:\(line) \(column) \(funcName) -> \(message)")
+        LogClicker.shared.log(exception: nil, error: nil, type: LogType.tWarning.rawValue , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
+    
     #endif
 }
 
-func LogClick(error:Error?, message:String,level:IssueLevel = IssueLevel.Normal,priority:IssuePriority = IssuePriority.P5, fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
+func Log(error:Error?, message:String,level:IssueLevel = IssueLevel.Normal,priority:IssuePriority = IssuePriority.P5, fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-    LogClicker.shared.printLog("\(LogType.tError.rawValue)[\(level)][\(priority)][\(fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!)]:\(line) \(column) \(funcName) -> \(String(describing: error)):\(message)")
+        LogClicker.shared.log(exception: nil, error: error, type: LogType.tInfo.rawValue , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
+    
     #endif
 }
 
-func LogClick(exception:exception?, message:String,level:IssueLevel = IssueLevel.Normal,priority:IssuePriority = IssuePriority.P5,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
+func Log(exception:exception?, message:String,level:IssueLevel = IssueLevel.Normal,priority:IssuePriority = IssuePriority.P5,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-    LogClicker.shared.printLog("\(LogType.tSevere.rawValue)[\(level)][\(priority)][\(fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!)]:\(line) \(column) \(funcName) -> \(String(describing: exception)):\(message)")
+        LogClicker.shared.log(exception: exception, error: nil, type: LogType.tInfo.rawValue , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
     #endif
 }
 
@@ -105,8 +93,7 @@ public class LogClicker
     public static var shared:LogClicker = LogClicker()
     
     //MARK: Public Variables
-    public var printLogsInConsole:Bool = false
-    public var saveLogsIntoFile:Bool = true
+    public var logsStoreLocation:LogsStoreLocation = .database
     
     //MARK: Private Variables
     private let projectName:String?
@@ -122,7 +109,7 @@ public class LogClicker
     private var logger:Logger = Logger()
     private let database:FMDatabase?
     
-    //MARK: Init
+    //MARK:- Init
     init() {
         self.projectName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String
         self.bundleID = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as? String
@@ -136,62 +123,34 @@ public class LogClicker
         
         
         let fileURL = try! FileManager.default
-            .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            .url(for: .applicationDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             .appendingPathComponent("LogClicker.sqlite")
         
         self.database = FMDatabase(url: fileURL)
         self.createTableIfNotExist()
     }
     
-    //MARK: Utility Functions
-    
-    private func log(exception:exception?,error:Error?, message:String,level:IssueLevel = IssueLevel.Normal,priority:IssuePriority = IssuePriority.P5,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
+    fileprivate func log(exception:exception?,error:Error?, type:String = LogType.tInfo.rawValue, message:String,level:String = IssueLevel.Normal.rawValue, priority:String = IssuePriority.P5.rawValue, environment:String = LogEnvironment.Default.rawValue,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
     {
-        //LogClicker.shared.printLog("\(LogType.tSevere.rawValue)[\(level)][\(priority)][\(fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!)]:\(line) \(column) \(funcName) -> \(String(describing: exception)):\(message)")
+        let msg = "\(LogType.tSevere.rawValue)[\(level)][\(priority)][\(fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!)]:\(line) \(column) \(funcName) -> \(String(describing: exception)):\(message)"
         
+        //--- Validate operation.
+        switch self.logsStoreLocation
+        {
+            case .printOnly:
+                    print(msg)
+                break
+            case .database:
+                    self.updateLog(msg: message, fileName: (fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!), type: type, level: level, priority: priority, environment: environment)
+                break
+            case .textFile:
+                    self.logger.write("\(Date().toString()) LogClicker :\(msg)")
+                break
+        }
+    
         
     }
     
-    public func printLog(_ logMsg:String){
-        self.logger.write("\(Date().toString()) LogClicker :\(logMsg)")
-    }
-    
-    public func deviceInfo() -> (
-        projectName:String,
-        bundleID:String,
-        projectVersion:String,
-        projectBuildNumber:String,
-        deviceName:String,
-        osVersion:String,
-        osName:String,
-        deviceIPAdrress:String)
-    {
-//        LogClicker.shared.printLog("PROJECT_NAME ->\(String(describing: self.projectName))")
-//        LogClicker.shared.printLog("BUNDLE_ID ->\(String(describing: self.bundleID))")
-//        LogClicker.shared.printLog("PROJECT_VERSION ->\(String(describing: self.projectVersion))")
-//        LogClicker.shared.printLog("PROJECT_BUILD_NUMBER ->\(String(describing: self.projectBuildNumber))")
-//        LogClicker.shared.printLog("DEVICE_NAME ->\(String(describing: self.deviceName))")
-//        LogClicker.shared.printLog("OS_VERSION ->\(String(describing: self.osVersion))")
-//        LogClicker.shared.printLog("OS_NAME ->\(String(describing: self.osName))")
-//        LogClicker.shared.printLog("IP_ADDRESS ->\(String(describing: self.deviceIPAdrress))")
-//        LogClicker.shared.printLog("ACCESS_TOKEN ->\(String(describing: self.accessToken))")
-        
-        return (String(describing: self.projectName),
-                String(describing: self.bundleID),
-                String(describing: self.projectVersion),
-                String(describing: self.projectBuildNumber),
-                String(describing: self.deviceName),
-                String(describing: self.osVersion),
-                String(describing: self.osName),
-                String(describing: self.deviceIPAdrress))
-        
-    }
-    
-    private class func sourceFileName(filePath: String) -> String {
-        let components = filePath.components(separatedBy: "/")
-        return components.isEmpty ? "" : components.last!
-    }
- 
     //MARK:- DB Function
     private func createTableIfNotExist(){
         if let database = self.database{
@@ -201,8 +160,7 @@ public class LogClicker
             }
             
             do {
-                
-                let create_tbl_query = "CREATE  TABLE tblLogClicker(ID INTEGER PRIMARY KEY autoincrement, LOG_DATE text, ITEM text, LOG_TYPE text, LEVEL text, PRIORITY text, ENVIRONMENT text, DeviceID text, DEVICE_NAME text, OS_VERSION text, IP_ADDRESS text, ACCESS_TOKEN text, BUNDLE_ID text, PROJECT_NAME text, PROJECT_VERSION text, PROJECT_BUILD_NUMBER text)"
+                let create_tbl_query = "CREATE TABLE IF NOT EXISTS tblLogClicker(ID INTEGER PRIMARY KEY autoincrement, LOG_DATE text, FILE_NAME text, ITEM text, LOG_TYPE text, LEVEL text, PRIORITY text, ENVIRONMENT text, DeviceID text, DEVICE_NAME text, OS_VERSION text, IP_ADDRESS text, ACCESS_TOKEN text, BUNDLE_ID text, PROJECT_NAME text, PROJECT_VERSION text, PROJECT_BUILD_NUMBER text)"
                 try database.executeUpdate(create_tbl_query, values: nil)
             } catch {
                 print("failed: \(error.localizedDescription)")
@@ -211,7 +169,7 @@ public class LogClicker
         }
     }
     
-    private func updateLog(msg:String,type:String = "ℹ️", level:String = "Normal", priority:String = "No Priority", environment:String = "Default"){
+    private func updateLog(msg:String,fileName:String, type:String = "ℹ️", level:String = "Normal", priority:String = "No Priority", environment:String = "Default"){
         if let database = self.database{
             guard database.open() else {
                 print("Unable to open database")
@@ -219,7 +177,7 @@ public class LogClicker
             }
             
             do {
-                try database.executeUpdate("INSERT INTO tblLogClicker(LOG_DATE, ITEM, LOG_TYPE, LEVEL, PRIORITY, ENVIRONMENT, DeviceID, DEVICE_NAME, OS_VERSION, IP_ADDRESS, ACCESS_TOKEN, BUNDLE_ID, PROJECT_NAME, PROJECT_VERSION, PROJECT_BUILD_NUMBER) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", values: [Date().toString(),msg,type,level,priority,environment,UIDevice.current.identifierForVendor!,self.deviceName!,self.osName!,self.deviceIPAdrress!,self.accessToken!,self.bundleID!,self.projectName!,self.projectVersion!,self.projectBuildNumber!])
+                try database.executeUpdate("INSERT INTO tblLogClicker(LOG_DATE, FILE_NAME, ITEM, LOG_TYPE, LEVEL, PRIORITY, ENVIRONMENT, DeviceID, DEVICE_NAME, OS_VERSION, IP_ADDRESS, ACCESS_TOKEN, BUNDLE_ID, PROJECT_NAME, PROJECT_VERSION, PROJECT_BUILD_NUMBER) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", values: [Date().toString(),fileName,msg,type,level,priority,environment,UIDevice.current.identifierForVendor!,self.deviceName!,self.osName!,self.deviceIPAdrress!,self.accessToken!,self.bundleID!,self.projectName!,self.projectVersion!,self.projectBuildNumber!])
             } catch {
                 print("failed: \(error.localizedDescription)")
             }
@@ -254,6 +212,43 @@ public class LogClicker
             database.close()
         }
         
+    }
+    
+    //MARK: Utility Functions
+    public func deviceInfo() -> (
+        projectName:String,
+        bundleID:String,
+        projectVersion:String,
+        projectBuildNumber:String,
+        deviceName:String,
+        osVersion:String,
+        osName:String,
+        deviceIPAdrress:String)
+    {
+//        LogClicker.shared.printLog("PROJECT_NAME ->\(String(describing: self.projectName))")
+//        LogClicker.shared.printLog("BUNDLE_ID ->\(String(describing: self.bundleID))")
+//        LogClicker.shared.printLog("PROJECT_VERSION ->\(String(describing: self.projectVersion))")
+//        LogClicker.shared.printLog("PROJECT_BUILD_NUMBER ->\(String(describing: self.projectBuildNumber))")
+//        LogClicker.shared.printLog("DEVICE_NAME ->\(String(describing: self.deviceName))")
+//        LogClicker.shared.printLog("OS_VERSION ->\(String(describing: self.osVersion))")
+//        LogClicker.shared.printLog("OS_NAME ->\(String(describing: self.osName))")
+//        LogClicker.shared.printLog("IP_ADDRESS ->\(String(describing: self.deviceIPAdrress))")
+//        LogClicker.shared.printLog("ACCESS_TOKEN ->\(String(describing: self.accessToken))")
+        
+        return (String(describing: self.projectName),
+                String(describing: self.bundleID),
+                String(describing: self.projectVersion),
+                String(describing: self.projectBuildNumber),
+                String(describing: self.deviceName),
+                String(describing: self.osVersion),
+                String(describing: self.osName),
+                String(describing: self.deviceIPAdrress))
+        
+    }
+    
+    private class func sourceFileName(filePath: String) -> String {
+        let components = filePath.components(separatedBy: "/")
+        return components.isEmpty ? "" : components.last!
     }
     
 }

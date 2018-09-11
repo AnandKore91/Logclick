@@ -17,6 +17,7 @@
 		0CBA0807214688B50058C4F5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0CBA0806214688B50058C4F5 /* README.md */; };
 		0CBA0809214689830058C4F5 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0CBA0808214689830058C4F5 /* Default-568h@2x.png */; };
 		0CBA080B21468A6A0058C4F5 /* Roadmap.md in Resources */ = {isa = PBXBuildFile; fileRef = 0CBA080A21468A6A0058C4F5 /* Roadmap.md */; };
+		3DCB2412C7CA25C8AEFDD63B /* Pods_AKLogClick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F82522B166141C4FC323E3E /* Pods_AKLogClick.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,9 @@
 		0CBA0806214688B50058C4F5 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		0CBA0808214689830058C4F5 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		0CBA080A21468A6A0058C4F5 /* Roadmap.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Roadmap.md; sourceTree = SOURCE_ROOT; };
+		4F82522B166141C4FC323E3E /* Pods_AKLogClick.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AKLogClick.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9941C66566116FD9B9BC5F4 /* Pods-AKLogClick.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AKLogClick.release.xcconfig"; path = "Pods/Target Support Files/Pods-AKLogClick/Pods-AKLogClick.release.xcconfig"; sourceTree = "<group>"; };
+		F2634D11B1F2A1D176A48084 /* Pods-AKLogClick.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AKLogClick.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AKLogClick/Pods-AKLogClick.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DCB2412C7CA25C8AEFDD63B /* Pods_AKLogClick.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +57,8 @@
 				0C1B9ED61FA0A01C00C8A9A2 /* AKLogClick */,
 				0CBA0804214688150058C4F5 /* SampleApp */,
 				0C1B9ED51FA0A01C00C8A9A2 /* Products */,
+				1F85D4BDDC01CE9577576299 /* Pods */,
+				F69F634A2A460ED6952242B1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -103,6 +110,23 @@
 			path = Extentions;
 			sourceTree = "<group>";
 		};
+		1F85D4BDDC01CE9577576299 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F2634D11B1F2A1D176A48084 /* Pods-AKLogClick.debug.xcconfig */,
+				E9941C66566116FD9B9BC5F4 /* Pods-AKLogClick.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		F69F634A2A460ED6952242B1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4F82522B166141C4FC323E3E /* Pods_AKLogClick.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -110,9 +134,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0C1B9EE61FA0A01C00C8A9A2 /* Build configuration list for PBXNativeTarget "AKLogClick" */;
 			buildPhases = (
+				D348A635165066676AB0474C /* [CP] Check Pods Manifest.lock */,
 				0C1B9ED01FA0A01C00C8A9A2 /* Sources */,
 				0C1B9ED11FA0A01C00C8A9A2 /* Frameworks */,
 				0C1B9ED21FA0A01C00C8A9A2 /* Resources */,
+				4E0DE48636EFC1CBB8FDDBCB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -172,6 +198,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4E0DE48636EFC1CBB8FDDBCB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-AKLogClick/Pods-AKLogClick-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AKLogClick/Pods-AKLogClick-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D348A635165066676AB0474C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AKLogClick-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0C1B9ED01FA0A01C00C8A9A2 /* Sources */ = {
@@ -320,10 +385,11 @@
 		};
 		0C1B9EE71FA0A01C00C8A9A2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F2634D11B1F2A1D176A48084 /* Pods-AKLogClick.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = AJVJDJAT9E;
+				DEVELOPMENT_TEAM = 285KN3UUR9;
 				INFOPLIST_FILE = SampleApp/SupportingFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.anand.AKLogClick;
@@ -335,10 +401,11 @@
 		};
 		0C1B9EE81FA0A01C00C8A9A2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E9941C66566116FD9B9BC5F4 /* Pods-AKLogClick.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = AJVJDJAT9E;
+				DEVELOPMENT_TEAM = 285KN3UUR9;
 				INFOPLIST_FILE = SampleApp/SupportingFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.anand.AKLogClick;

@@ -28,6 +28,9 @@
 - Reset log history.
 - Reset logs from date: to date:
 
+- Max File Size
+- Reset after every 7 days
+- File name
 
 ## Log Type:
 - Info

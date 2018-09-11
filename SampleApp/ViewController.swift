@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(LogClicker.shared.deviceInfo())
+        LogClicker.shared.logsStoreLocation = .printAndDatabase
     
         Log(info: "This is informations log.")
         Log(warning: "This is Warning log.")

@@ -13,10 +13,10 @@ import FMDB
 //MARK:- Enums
 public enum LogType: String
 {
-    case tError = "[‼️]" // error
-    case tInfo = "[ℹ️]" // info
-    case tWarning = "[⚠️]" // warning
-    case tSevere = "[🔥]" // severe
+    case tError = "[Error ‼️]" // error
+    case tInfo = "[Info ℹ️]" // info
+    case tWarning = "[Warning ⚠️]" // warning
+    case tSevere = "[Severe 🔥]" // severe
 }
 
 public enum LogEnvironment:String
@@ -60,14 +60,14 @@ public enum LogsStoreLocation:String
 func Log(info message:String,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-        LogClicker.shared.log(exception: nil, error: nil, type: "Info" , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
+        LogClicker.shared.log(exception: nil, error: nil, type: .tInfo , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
     #endif
 }
 
 func Log(warning message:String, fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-        LogClicker.shared.log(exception: nil, error: nil, type: "Warning" , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
+        LogClicker.shared.log(exception: nil, error: nil, type: .tWarning , message: message, level: IssueLevel.Normal.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
     
     #endif
 }
@@ -75,7 +75,7 @@ func Log(warning message:String, fileName: String = #file, line: Int = #line, co
 func Log(error:Error?, message:String,level:IssueLevel = IssueLevel.Normal,priority:IssuePriority = IssuePriority.P5, fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-        LogClicker.shared.log(exception: nil, error: error, type: "Error" , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
+        LogClicker.shared.log(exception: nil, error: error, type: .tError , message: message, level: level.rawValue, priority: priority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
     
     #endif
 }
@@ -83,7 +83,7 @@ func Log(error:Error?, message:String,level:IssueLevel = IssueLevel.Normal,prior
 func Log(exception:exception?, message:String,level:IssueLevel = IssueLevel.Normal,priority:IssuePriority = IssuePriority.P5,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-        LogClicker.shared.log(exception: exception, error: nil, type: "Exception" , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
+        LogClicker.shared.log(exception: exception, error: nil, type: .tSevere, message: message, level: level.rawValue, priority: priority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
     #endif
 }
 
@@ -136,9 +136,9 @@ public class LogClicker
         }
     }
     
-    fileprivate func log(exception:exception?,error:Error?, type:String = "Info", message:String,level:String = IssueLevel.Normal.rawValue, priority:String = IssuePriority.P5.rawValue, environment:String = LogEnvironment.Default.rawValue,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
+    fileprivate func log(exception:exception?,error:Error?, type:LogType, message:String,level:String = IssueLevel.Normal.rawValue, priority:String = IssuePriority.P5.rawValue, environment:String = LogEnvironment.Default.rawValue,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
     {
-        let msg = "\(LogType.tSevere.rawValue)[\(level)][\(priority)][\(fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!)]:\(line) \(column) \(funcName) -> \(String(describing: exception)):\(message)"
+        let msg = "\(Date().toString()) \(type.rawValue)[\(level)][\(priority)][\(fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!)]:\(line) \(column) \(funcName) -> \(message)"
         
         //--- Validate operation.
         switch self.logsStoreLocation
@@ -147,7 +147,7 @@ public class LogClicker
                 print(msg)
                 break
             case .database:
-                self.updateLog(msg: message, fileName: (fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!), type: type, level: level, priority: priority, environment: environment)
+                self.updateLog(msg: message, fileName: (fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!), type: type.rawValue, level: level, priority: priority, environment: environment)
                 break
             case .textFile:
                 self.logger.write("\(Date().toString()) LogClicker :\(msg)")
@@ -158,7 +158,7 @@ public class LogClicker
                 break
             case .printAndDatabase:
                 print(msg)
-                self.updateLog(msg: message, fileName: (fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!), type: type, level: level, priority: priority, environment: environment)
+                self.updateLog(msg: message, fileName: (fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!), type: type.rawValue, level: level, priority: priority, environment: environment)
                 break
         }
     
@@ -191,7 +191,7 @@ public class LogClicker
             }
             
             do {
-                try database.executeUpdate("INSERT INTO tblLogClicker(LOG_DATE, FILE_NAME, ITEM, LOG_TYPE, LEVEL, PRIORITY, ENVIRONMENT, DeviceID, DEVICE_NAME, OS_VERSION, IP_ADDRESS, ACCESS_TOKEN, BUNDLE_ID, PROJECT_NAME, PROJECT_VERSION, PROJECT_BUILD_NUMBER) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", values: [Date().toString(),fileName,msg,type,level,priority,environment,UIDevice.current.identifierForVendor!,self.deviceName!,self.osName!,self.deviceIPAdrress!,self.accessToken!,self.bundleID!,self.projectName!,self.projectVersion!,self.projectBuildNumber!])
+                try database.executeUpdate("INSERT INTO tblLogClicker(LOG_DATE, FILE_NAME, ITEM, LOG_TYPE, LEVEL, PRIORITY, ENVIRONMENT, DeviceID, DEVICE_NAME, OS_VERSION, IP_ADDRESS, ACCESS_TOKEN, BUNDLE_ID, PROJECT_NAME, PROJECT_VERSION, PROJECT_BUILD_NUMBER) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", values: [Date().toString(),fileName,msg,type,level,priority,environment,UIDevice.current.identifierForVendor!,self.deviceName!,self.osVersion!,self.deviceIPAdrress!,self.accessToken!,self.bundleID!,self.projectName!,self.projectVersion!,self.projectBuildNumber!])
             } catch {
                 print("failed: \(error.localizedDescription)")
             }

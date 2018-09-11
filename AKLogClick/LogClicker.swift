@@ -52,20 +52,22 @@ public enum LogsStoreLocation:String
     case textFile = "textFile"
     case database = "database"
     case printOnly = "printOnly"
+    case printAndTextFile = "printAndTextFile"
+    case printAndDatabase = "printAndDatabase"
 }
 
 //MARK:- Log Functions
 func Log(info message:String,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-        LogClicker.shared.log(exception: nil, error: nil, type: LogType.tInfo.rawValue , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
+        LogClicker.shared.log(exception: nil, error: nil, type: "Info" , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
     #endif
 }
 
 func Log(warning message:String, fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-        LogClicker.shared.log(exception: nil, error: nil, type: LogType.tWarning.rawValue , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
+        LogClicker.shared.log(exception: nil, error: nil, type: "Warning" , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
     
     #endif
 }
@@ -73,7 +75,7 @@ func Log(warning message:String, fileName: String = #file, line: Int = #line, co
 func Log(error:Error?, message:String,level:IssueLevel = IssueLevel.Normal,priority:IssuePriority = IssuePriority.P5, fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-        LogClicker.shared.log(exception: nil, error: error, type: LogType.tInfo.rawValue , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
+        LogClicker.shared.log(exception: nil, error: error, type: "Error" , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
     
     #endif
 }
@@ -81,7 +83,7 @@ func Log(error:Error?, message:String,level:IssueLevel = IssueLevel.Normal,prior
 func Log(exception:exception?, message:String,level:IssueLevel = IssueLevel.Normal,priority:IssuePriority = IssuePriority.P5,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
 {
     #if DEBUG
-        LogClicker.shared.log(exception: exception, error: nil, type: LogType.tInfo.rawValue , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
+        LogClicker.shared.log(exception: exception, error: nil, type: "Exception" , message: message, level: IssueLevel.Trivial.rawValue, priority: IssuePriority.NoPriority.rawValue, environment: LogEnvironment.Default.rawValue, fileName: fileName, line: line, column: column, funcName: funcName)
     #endif
 }
 
@@ -121,16 +123,20 @@ public class LogClicker
         self.deviceIPAdrress = UIDevice.getIP()!
         self.accessToken = ""
         
-        
-        let fileURL = try! FileManager.default
-            .url(for: .applicationDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            .appendingPathComponent("LogClicker.sqlite")
-        
-        self.database = FMDatabase(url: fileURL)
-        self.createTableIfNotExist()
+        do{
+            let fileURL = try? FileManager.default
+                .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                .appendingPathComponent("LogClicker.sqlite")
+            
+            self.database = FMDatabase(url: fileURL)
+            self.createTableIfNotExist()
+        }
+        catch {
+            print("Exception occured.")
+        }
     }
     
-    fileprivate func log(exception:exception?,error:Error?, type:String = LogType.tInfo.rawValue, message:String,level:String = IssueLevel.Normal.rawValue, priority:String = IssuePriority.P5.rawValue, environment:String = LogEnvironment.Default.rawValue,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
+    fileprivate func log(exception:exception?,error:Error?, type:String = "Info", message:String,level:String = IssueLevel.Normal.rawValue, priority:String = IssuePriority.P5.rawValue, environment:String = LogEnvironment.Default.rawValue,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
     {
         let msg = "\(LogType.tSevere.rawValue)[\(level)][\(priority)][\(fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!)]:\(line) \(column) \(funcName) -> \(String(describing: exception)):\(message)"
         
@@ -138,13 +144,21 @@ public class LogClicker
         switch self.logsStoreLocation
         {
             case .printOnly:
-                    print(msg)
+                print(msg)
                 break
             case .database:
-                    self.updateLog(msg: message, fileName: (fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!), type: type, level: level, priority: priority, environment: environment)
+                self.updateLog(msg: message, fileName: (fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!), type: type, level: level, priority: priority, environment: environment)
                 break
             case .textFile:
-                    self.logger.write("\(Date().toString()) LogClicker :\(msg)")
+                self.logger.write("\(Date().toString()) LogClicker :\(msg)")
+                break
+            case .printAndTextFile:
+                print(msg)
+                self.logger.write("\(Date().toString()) LogClicker :\(msg)")
+                break
+            case .printAndDatabase:
+                print(msg)
+                self.updateLog(msg: message, fileName: (fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!), type: type, level: level, priority: priority, environment: environment)
                 break
         }
     

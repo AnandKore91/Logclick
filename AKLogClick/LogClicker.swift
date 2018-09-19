@@ -54,7 +54,12 @@ public enum LogsStoreLocation:String
     case printOnly = "printOnly"
     case printAndTextFile = "printAndTextFile"
     case printAndDatabase = "printAndDatabase"
+    case textFileAndDatabase = "textFileAndDatabase"
 }
+
+//MARK: Constants
+private let LOG_TEXT_FILE_NAME = "LogClicker.txt"
+private let LOG_DATABASE_FILE_NAME = "LogClicker.sqlite"
 
 //MARK:- Log Functions
 func Log(info message:String,fileName: String = #file, line: Int = #line, column: Int = #column,funcName: String = #function)
@@ -123,16 +128,13 @@ public class LogClicker
         self.deviceIPAdrress = UIDevice.getIP()!
         self.accessToken = ""
         
-        do{
-            let fileURL = try? FileManager.default
-                .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-                .appendingPathComponent("LogClicker.sqlite")
-            
+        if let fileURL = LogClicker.getFileURLfor(fileName: LOG_DATABASE_FILE_NAME, createIfNotExist: true){
             self.database = FMDatabase(url: fileURL)
             self.createTableIfNotExist()
         }
-        catch {
-            print("Exception occured.")
+        else{
+            print("Failed to create file.")
+            self.database  = FMDatabase()
         }
     }
     
@@ -160,6 +162,11 @@ public class LogClicker
                 print(msg)
                 self.updateLog(msg: message, fileName: (fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!), type: type.rawValue, level: level, priority: priority, environment: environment)
                 break
+            case .textFileAndDatabase:
+                self.logger.write("\(Date().toString()) LogClicker :\(msg)")
+                self.updateLog(msg: message, fileName: (fileName.components(separatedBy: "/").isEmpty ? "" : fileName.components(separatedBy: "/").last!), type: type.rawValue, level: level, priority: priority, environment: environment)
+                break
+            
         }
     
         
@@ -228,6 +235,16 @@ public class LogClicker
         
     }
     
+    //MARK: Clearing Functions
+    public func resetLogs(location:LogsStoreLocation)->Bool{
+        var status = false
+        
+        
+        
+        
+        return status
+    }
+    
     //MARK: Utility Functions
     public func deviceInfo() -> (
         projectName:String,
@@ -265,6 +282,30 @@ public class LogClicker
         return components.isEmpty ? "" : components.last!
     }
     
+    fileprivate class func getFileURLfor(fileName:String, createIfNotExist:Bool)->URL?{
+        let fileURL = try? FileManager.default
+            .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: createIfNotExist)
+            .appendingPathComponent(fileName)
+        if let fileURL = fileURL {
+            return fileURL
+        }
+        else{
+            return nil
+        }
+    }
+    
+    private class func removeFile(filename:String, path:String)->Bool{
+        var status = false
+        
+        if let fileURL = LogClicker.getFileURLfor(fileName: filename, createIfNotExist: false){
+            
+        }
+        
+        
+        
+        return status
+    }
+    
 }
 
 //MARK:- Structs
@@ -272,25 +313,30 @@ struct Logger: TextOutputStream {
     
     //--- Appends the given string to the stream.
     mutating func write(_ string: String) {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .allDomainsMask)
-        let documentDirectoryPath = paths.first!
-        let log = documentDirectoryPath.appendingPathComponent("LogClicker.txt")
-        
-        print(string)
-        let msg = "\(string)\n"
-        do {
-            let handle = try FileHandle(forWritingTo: log)
-            handle.seekToEndOfFile()
-            handle.write(msg.data(using: .utf8)!)
-            handle.closeFile()
-        } catch {
-            print(error.localizedDescription == "The file “LogClicker.txt” doesn’t exist." ? "": error.localizedDescription)
+        if let fileURL = LogClicker.getFileURLfor(fileName: LOG_TEXT_FILE_NAME, createIfNotExist: true){
+            print(string)
+            let msg = "\(string)\n"
             do {
-                try msg.data(using: .utf8)?.write(to: log)
+                let handle = try FileHandle(forWritingTo: fileURL)
+                handle.seekToEndOfFile()
+                handle.write(msg.data(using: .utf8)!)
+                handle.closeFile()
             } catch {
-                print(error.localizedDescription)
+                print(error.localizedDescription == "The file “LogClicker.txt” doesn’t exist." ? "": error.localizedDescription)
+                do {
+                    try msg.data(using: .utf8)?.write(to: fileURL)
+                } catch {
+                    print(error.localizedDescription)
+                }
             }
         }
+        else{
+            print("Failed to create file.")
+            
+        }
+        
+        
+        
         
     }
     

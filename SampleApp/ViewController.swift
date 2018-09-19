@@ -21,6 +21,10 @@ class ViewController: UIViewController {
         Log(exception: nil, message: "This is exceptions log.")
         Log(error: nil, message: "This is error with more details", level: .Major, priority: .P3)
         Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)
+        
+        for _ in 0...10000{
+            Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)
+        }
     }
 
     override func didReceiveMemoryWarning() {

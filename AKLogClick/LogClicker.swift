@@ -116,6 +116,34 @@ public class LogClicker
     private var logger:Logger = Logger()
     private let database:FMDatabase?
     
+    fileprivate var TEXT_LOG_FILE_URL:URL?{
+        get{
+            let fileURL = try? FileManager.default
+                .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                .appendingPathComponent(LOG_TEXT_FILE_NAME)
+            if let fileURL = fileURL {
+                return fileURL
+            }
+            else{
+                return nil
+            }
+        }
+    }
+    
+    fileprivate var DB_LOG_FILE_URL:URL?{
+        get{
+            let fileURL = try? FileManager.default
+                .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                .appendingPathComponent(LOG_DATABASE_FILE_NAME)
+            if let fileURL = fileURL {
+                return fileURL
+            }
+            else{
+                return nil
+            }
+        }
+    }
+    
     //MARK:- Init
     init() {
         self.projectName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String
@@ -235,17 +263,43 @@ public class LogClicker
         
     }
     
-    //MARK: Clearing Functions
+    //MARK:- Clearing Functions
     public func resetLogs(location:LogsStoreLocation)->Bool{
-        var status = false
-        
-        
-        
-        
-        return status
+        switch location {
+        case .database:
+            if let fileURL:URL = DB_LOG_FILE_URL{
+                do{
+                    try FileManager.default.removeItem(at: fileURL)
+                }
+                catch{
+                    print("Unable to reset logs.")
+                    return false
+                }
+            }
+            return true
+        case .textFile:
+            if let fileURL:URL = TEXT_LOG_FILE_URL{
+                do{
+                    try FileManager.default.removeItem(at: fileURL)
+                }
+                catch{
+                    print("Unable to reset logs.")
+                    return false
+                }
+            }
+            return true
+        case .printOnly: break
+        case .printAndTextFile: break
+        case .printAndDatabase: break
+        case .textFileAndDatabase: break
+        }
+        return false
     }
     
-    //MARK: Utility Functions
+    //MARK:- Logs Sharing Function
+    
+    
+    //MARK:- Utility Functions
     public func deviceInfo() -> (
         projectName:String,
         bundleID:String,
@@ -293,18 +347,7 @@ public class LogClicker
             return nil
         }
     }
-    
-    private class func removeFile(filename:String, path:String)->Bool{
-        var status = false
-        
-        if let fileURL = LogClicker.getFileURLfor(fileName: filename, createIfNotExist: false){
-            
-        }
-        
-        
-        
-        return status
-    }
+
     
 }
 

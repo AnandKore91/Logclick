@@ -263,6 +263,24 @@ public class LogClicker
         
     }
     
+    fileprivate func executeUpdate(query:String)->Bool{
+        if let database = self.database{
+            guard database.open() else {
+                print("Unable to open database")
+                return false
+            }
+            
+            do {
+                try database.executeUpdate(query, values: nil)
+            } catch {
+                print("failed: \(error.localizedDescription)")
+                return false
+            }
+            database.close()
+        }
+        return true
+    }
+    
     //MARK:- Clearing Functions
     public func resetLogs(location:LogsStoreLocation)->Bool{
         switch location {
@@ -294,6 +312,12 @@ public class LogClicker
         case .textFileAndDatabase: break
         }
         return false
+    }
+    
+    public func resetLogs(fromDate:Date, toDate:Date, location:LogsStoreLocation)->Bool{
+        let dateformater = DateFormatter()
+        dateformater.dateFormat = "dd-MM-yy"
+        return executeUpdate(query: "DELETE FROM tblLogClicker WHERE LOG_DATE BETWEEN '\(dateformater.string(from: fromDate))'  AND '\(dateformater.string(from: toDate))'")
     }
     
     //MARK:- Logs Sharing Function

@@ -1,4 +1,4 @@
-# LogClick
+![Logclick](https://github.com/AnandKore91/LogClick/blob/master/logclick.png)
 
 ## Functions:
 - `Log(info: "This is informations log.")`

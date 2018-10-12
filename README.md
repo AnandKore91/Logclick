@@ -40,16 +40,17 @@ Example: `LogClicker.shared.logsStoreLocation = .printAndDatabase`
 
 ## Sharing Logs
 - [x] Get logs database
-    ```
+```
 if let db_url = LogClicker.shared.DB_LOG_FILE_URL{
     print(db_url)
 }
 ```
-
 - [x] Get logs textfile
-    ```if let db_url = LogClicker.shared.TEXT_LOG_FILE_URL{
-    print(db_url)
-    }```
+```
+if let db_url = LogClicker.shared.TEXT_LOG_FILE_URL{
+print(db_url)
+}
+```
     
 - [ ] Upload report file to URL. (Adding soon)
 - [ ] File name (Adding soon)

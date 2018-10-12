@@ -57,6 +57,21 @@ public enum LogsStoreLocation:String
     case textFileAndDatabase = "textFileAndDatabase"
 }
 
+public enum WhereKey:String{
+    case LOG_DATE = "LOG_DATE"
+    case LOG_TYPE = "LOG_TYPE"
+    case LEVEL = "LEVEL"
+    case PRIORITY = "PRIORITY"
+    case FILE_NAME = "FILE_NAME"
+    case LOG = "ITEM"
+    case ENVIRONMENT = "ENVIRONMENT"
+    case OS_VERSION = "OS_VERSION"
+    case BUNDLE_ID = "BUNDLE_ID"
+    case PROJECT_NAME = "PROJECT_NAME"
+    case PROJECT_VERSION = "PROJECT_VERSION"
+    case PROJECT_BUILD_NUMBER = "PROJECT_BUILD_NUMBER"
+}
+
 //MARK: Constants
 private let LOG_TEXT_FILE_NAME = "LogClicker.txt"
 private let LOG_DATABASE_FILE_NAME = "LogClicker.sqlite"
@@ -200,88 +215,83 @@ public class LogClicker
         
     }
     
-    //MARK:- DB Function
-    private func createTableIfNotExist(){
-        if let database = self.database{
-            guard database.open() else {
-                print("Unable to open database")
-                return
-            }
-            
-            do {
-                let create_tbl_query = "CREATE TABLE IF NOT EXISTS tblLogClicker(ID INTEGER PRIMARY KEY autoincrement, LOG_DATE text, FILE_NAME text, ITEM text, LOG_TYPE text, LEVEL text, PRIORITY text, ENVIRONMENT text, DeviceID text, DEVICE_NAME text, OS_VERSION text, IP_ADDRESS text, ACCESS_TOKEN text, BUNDLE_ID text, PROJECT_NAME text, PROJECT_VERSION text, PROJECT_BUILD_NUMBER text)"
-                try database.executeUpdate(create_tbl_query, values: nil)
-            } catch {
-                print("failed: \(error.localizedDescription)")
-            }
-            database.close()
-        }
-    }
-    
-    private func updateLog(msg:String,fileName:String, type:String = "ℹ️", level:String = "Normal", priority:String = "No Priority", environment:String = "Default"){
-        if let database = self.database{
-            guard database.open() else {
-                print("Unable to open database")
-                return
-            }
-            
-            do {
-                try database.executeUpdate("INSERT INTO tblLogClicker(LOG_DATE, FILE_NAME, ITEM, LOG_TYPE, LEVEL, PRIORITY, ENVIRONMENT, DeviceID, DEVICE_NAME, OS_VERSION, IP_ADDRESS, ACCESS_TOKEN, BUNDLE_ID, PROJECT_NAME, PROJECT_VERSION, PROJECT_BUILD_NUMBER) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", values: [Date().toString(),fileName,msg,type,level,priority,environment,UIDevice.current.identifierForVendor!,self.deviceName!,self.osVersion!,self.deviceIPAdrress!,self.accessToken!,self.bundleID!,self.projectName!,self.projectVersion!,self.projectBuildNumber!])
-            } catch {
-                print("failed: \(error.localizedDescription)")
-            }
-            
-            database.close()
-        }
+    //MARK:- Logs Sharing Function
+    fileprivate func upload(logFile:URL, uploadURL:URL){
         
     }
-    private func fetchData(query:String)
+    
+    //MARK:- Utility Functions
+    public func deviceInfo() -> (
+        projectName:String,
+        bundleID:String,
+        projectVersion:String,
+        projectBuildNumber:String,
+        deviceName:String,
+        osVersion:String,
+        osName:String,
+        deviceIPAdrress:String)
     {
-        var arrResults = [[String:Any]]()
-        if let database = self.database
-        {
-            guard database.open() else {
-                print("Unable to open database")
-                return
-            }
-            
-            do{
-                let rs = try database.executeQuery(query, values: nil)
-                for index in 0...rs.columnCount
-                {
-                    let columnName:String = rs.columnName(for: index)!
-                    let value = rs.string(forColumn: columnName)
-                    
-                    arrResults.append([columnName:value ?? ""])
+        return (String(describing: self.projectName),
+                String(describing: self.bundleID),
+                String(describing: self.projectVersion),
+                String(describing: self.projectBuildNumber),
+                String(describing: self.deviceName),
+                String(describing: self.osVersion),
+                String(describing: self.osName),
+                String(describing: self.deviceIPAdrress))
+        
+    }
+    
+    fileprivate class func sourceFileName(filePath: String) -> String {
+        let components = filePath.components(separatedBy: "/")
+        return components.isEmpty ? "" : components.last!
+    }
+    
+    fileprivate class func getFileURLfor(fileName:String, createIfNotExist:Bool)->URL?{
+        let fileURL = try? FileManager.default
+            .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: createIfNotExist)
+            .appendingPathComponent(fileName)
+        if let fileURL = fileURL {
+            return fileURL
+        }
+        else{
+            return nil
+        }
+    }
+
+    
+}
+
+//MARK:- Structs
+struct Logger: TextOutputStream {
+    //--- Appends the given string to the stream.
+    mutating func write(_ string: String) {
+        if let fileURL = LogClicker.getFileURLfor(fileName: LOG_TEXT_FILE_NAME, createIfNotExist: true){
+            print(string)
+            let msg = "\(string)\n"
+            do {
+                let handle = try FileHandle(forWritingTo: fileURL)
+                handle.seekToEndOfFile()
+                handle.write(msg.data(using: .utf8)!)
+                handle.closeFile()
+            } catch {
+                print(error.localizedDescription == "The file “LogClicker.txt” doesn’t exist." ? "": error.localizedDescription)
+                do {
+                    try msg.data(using: .utf8)?.write(to: fileURL)
+                } catch {
+                    print(error.localizedDescription)
                 }
             }
-            catch {
-                print("Exception")
-            }
-            database.close()
         }
-        
-    }
-    
-    fileprivate func executeUpdate(query:String)->Bool{
-        if let database = self.database{
-            guard database.open() else {
-                print("Unable to open database")
-                return false
-            }
+        else{
+            print("Failed to create file.")
             
-            do {
-                try database.executeUpdate(query, values: nil)
-            } catch {
-                print("failed: \(error.localizedDescription)")
-                return false
-            }
-            database.close()
         }
-        return true
     }
-    
-    //MARK:- Clearing Functions
+}
+
+//MARK:- Resetter Functions
+extension LogClicker{
     public func resetLogs(location:LogsStoreLocation)->Bool{
         switch location {
         case .database:
@@ -319,92 +329,131 @@ public class LogClicker
         dateformater.dateFormat = "dd-MM-yy"
         return executeUpdate(query: "DELETE FROM tblLogClicker WHERE LOG_DATE BETWEEN '\(dateformater.string(from: fromDate))'  AND '\(dateformater.string(from: toDate))'")
     }
-    
-    //MARK:- Logs Sharing Function
-    
-    
-    //MARK:- Utility Functions
-    public func deviceInfo() -> (
-        projectName:String,
-        bundleID:String,
-        projectVersion:String,
-        projectBuildNumber:String,
-        deviceName:String,
-        osVersion:String,
-        osName:String,
-        deviceIPAdrress:String)
-    {
-//        LogClicker.shared.printLog("PROJECT_NAME ->\(String(describing: self.projectName))")
-//        LogClicker.shared.printLog("BUNDLE_ID ->\(String(describing: self.bundleID))")
-//        LogClicker.shared.printLog("PROJECT_VERSION ->\(String(describing: self.projectVersion))")
-//        LogClicker.shared.printLog("PROJECT_BUILD_NUMBER ->\(String(describing: self.projectBuildNumber))")
-//        LogClicker.shared.printLog("DEVICE_NAME ->\(String(describing: self.deviceName))")
-//        LogClicker.shared.printLog("OS_VERSION ->\(String(describing: self.osVersion))")
-//        LogClicker.shared.printLog("OS_NAME ->\(String(describing: self.osName))")
-//        LogClicker.shared.printLog("IP_ADDRESS ->\(String(describing: self.deviceIPAdrress))")
-//        LogClicker.shared.printLog("ACCESS_TOKEN ->\(String(describing: self.accessToken))")
-        
-        return (String(describing: self.projectName),
-                String(describing: self.bundleID),
-                String(describing: self.projectVersion),
-                String(describing: self.projectBuildNumber),
-                String(describing: self.deviceName),
-                String(describing: self.osVersion),
-                String(describing: self.osName),
-                String(describing: self.deviceIPAdrress))
-        
-    }
-    
-    private class func sourceFileName(filePath: String) -> String {
-        let components = filePath.components(separatedBy: "/")
-        return components.isEmpty ? "" : components.last!
-    }
-    
-    fileprivate class func getFileURLfor(fileName:String, createIfNotExist:Bool)->URL?{
-        let fileURL = try? FileManager.default
-            .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: createIfNotExist)
-            .appendingPathComponent(fileName)
-        if let fileURL = fileURL {
-            return fileURL
-        }
-        else{
-            return nil
-        }
-    }
-
-    
 }
 
-//MARK:- Structs
-struct Logger: TextOutputStream {
-    
-    //--- Appends the given string to the stream.
-    mutating func write(_ string: String) {
-        if let fileURL = LogClicker.getFileURLfor(fileName: LOG_TEXT_FILE_NAME, createIfNotExist: true){
-            print(string)
-            let msg = "\(string)\n"
-            do {
-                let handle = try FileHandle(forWritingTo: fileURL)
-                handle.seekToEndOfFile()
-                handle.write(msg.data(using: .utf8)!)
-                handle.closeFile()
-            } catch {
-                print(error.localizedDescription == "The file “LogClicker.txt” doesn’t exist." ? "": error.localizedDescription)
-                do {
-                    try msg.data(using: .utf8)?.write(to: fileURL)
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-        else{
-            print("Failed to create file.")
-            
-        }
-        
-        
-        
-        
+//MARK:- Logs Getters
+extension LogClicker{
+    public func getAllLogs()-> [[String:Any]]{
+        return fetchData(query: "SELECT * FROM tblLogClicker")
     }
     
+    public func getLogs(whereKeys:[WhereKey:String]!){
+        var whereKeyArray = [String]()
+        for (key, value) in whereKeys{
+            whereKeyArray.append("\(key.rawValue) = '\(value)'")
+        }
+        
+        
+        let whereKeyString = "SELECT * FROM tblLogClicker WHERE \(whereKeyArray.joined(separator: " AND "))"
+        
+        print("\(whereKeyString)")
+        
+        let result = fetchData(query: whereKeyString)
+        print(result)
+    }
+    /*
+     LOG_DATE
+     LOG_TYPE
+     LEVEL
+     PRIORITY
+     
+     FILE_NAME
+     ITEM
+     ENVIRONMENT
+     DeviceID
+     DEVICE_NAME
+     OS_VERSION
+     IP_ADDRESS
+     ACCESS_TOKEN
+     BUNDLE_ID
+     PROJECT_NAME
+     PROJECT_VERSION
+     PROJECT_BUILD_NUMBER
+     */
+    
+    public func getLogs(fromDate:Date, toDate:Date, location:LogsStoreLocation)-> [[String:Any]]{
+        let dateformater = DateFormatter()
+        dateformater.dateFormat = "dd-MM-yy"
+        return fetchData(query: "SELECT * FROM tblLogClicker WHERE LOG_DATE BETWEEN '\(dateformater.string(from: fromDate))'  AND '\(dateformater.string(from: toDate))'")
+    }
+}
+
+//MARK:- DB Function
+extension LogClicker{
+    fileprivate func createTableIfNotExist(){
+        if let database = self.database{
+            guard database.open() else {
+                print("Unable to open database")
+                return
+            }
+            
+            do {
+                let create_tbl_query = "CREATE TABLE IF NOT EXISTS tblLogClicker(ID INTEGER PRIMARY KEY autoincrement, LOG_DATE text, FILE_NAME text, ITEM text, LOG_TYPE text, LEVEL text, PRIORITY text, ENVIRONMENT text, DeviceID text, DEVICE_NAME text, OS_VERSION text, IP_ADDRESS text, ACCESS_TOKEN text, BUNDLE_ID text, PROJECT_NAME text, PROJECT_VERSION text, PROJECT_BUILD_NUMBER text)"
+                try database.executeUpdate(create_tbl_query, values: nil)
+            } catch {
+                print("failed: \(error.localizedDescription)")
+            }
+            database.close()
+        }
+    }
+    
+    fileprivate func updateLog(msg:String,fileName:String, type:String = "ℹ️", level:String = "Normal", priority:String = "No Priority", environment:String = "Default"){
+        if let database = self.database{
+            guard database.open() else {
+                print("Unable to open database")
+                return
+            }
+            
+            do {
+                try database.executeUpdate("INSERT INTO tblLogClicker(LOG_DATE, FILE_NAME, ITEM, LOG_TYPE, LEVEL, PRIORITY, ENVIRONMENT, DeviceID, DEVICE_NAME, OS_VERSION, IP_ADDRESS, ACCESS_TOKEN, BUNDLE_ID, PROJECT_NAME, PROJECT_VERSION, PROJECT_BUILD_NUMBER) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", values: [Date().toString(),fileName,msg,type,level,priority,environment,UIDevice.current.identifierForVendor!,self.deviceName!,self.osVersion!,self.deviceIPAdrress!,self.accessToken!,self.bundleID!,self.projectName!,self.projectVersion!,self.projectBuildNumber!])
+            } catch {
+                print("failed: \(error.localizedDescription)")
+            }
+            
+            database.close()
+        }
+        
+    }
+    fileprivate func fetchData(query:String) ->[[String : Any]]
+    {
+        var arrResults = [[String:Any]]()
+        if let database = self.database
+        {
+            guard database.open() else {
+                print("Unable to open database")
+                return arrResults
+            }
+            
+            do{
+                let rs = try database.executeQuery(query, values: nil)
+                while rs.next() {
+                    arrResults.append(rs.resultDictionary as! [String : Any])
+                }
+            }
+            catch {
+                print("Exception")
+            }
+            database.close()
+        }
+        print(arrResults)
+        return arrResults
+    }
+    
+    fileprivate func executeUpdate(query:String)->Bool{
+        if let database = self.database{
+            guard database.open() else {
+                print("Unable to open database")
+                return false
+            }
+            
+            do {
+                try database.executeUpdate(query, values: nil)
+            } catch {
+                print("failed: \(error.localizedDescription)")
+                return false
+            }
+            database.close()
+        }
+        return true
+    }
 }

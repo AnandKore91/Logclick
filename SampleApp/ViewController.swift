@@ -22,9 +22,13 @@ class ViewController: UIViewController {
         Log(error: nil, message: "This is error with more details", level: .Major, priority: .P3)
         Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)
         
-        for _ in 0...10000{
+        for _ in 0...10{
             Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)
         }
+        
+        
+        let logs = LogClicker.shared.getLogs(whereKeys: [WhereKey.LEVEL : IssueLevel.Blocker.rawValue, WhereKey.OS_VERSION:"11.4.1"])
+        print(logs)
     }
 
     override func didReceiveMemoryWarning() {

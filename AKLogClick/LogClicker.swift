@@ -131,7 +131,7 @@ public class LogClicker
     private var logger:Logger = Logger()
     private let database:FMDatabase?
     
-    fileprivate var TEXT_LOG_FILE_URL:URL?{
+    public var TEXT_LOG_FILE_URL:URL?{
         get{
             let fileURL = try? FileManager.default
                 .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
@@ -145,7 +145,7 @@ public class LogClicker
         }
     }
     
-    fileprivate var DB_LOG_FILE_URL:URL?{
+    public var DB_LOG_FILE_URL:URL?{
         get{
             let fileURL = try? FileManager.default
                 .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)

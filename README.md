@@ -1,12 +1,12 @@
 # LogClick
 
 ## Functions:
-`Log(info: "This is informations log.")`
-`Log(warning: "This is Warning log.")`
-`Log(error: nil, message: "Error with optional error.")`
-`Log(exception: nil, message: "This is exceptions log.")`
-`Log(error: nil, message: "This is error with more details", level: .Major, priority: .P3)`
-`Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)`
+- `Log(info: "This is informations log.")`
+- `Log(warning: "This is Warning log.")`
+- `Log(error: nil, message: "Error with optional error.")`
+- `Log(exception: nil, message: "This is exceptions log.")`
+- `Log(error: nil, message: "This is error with more details", level: .Major, priority: .P3)`
+- `Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)`
 
 ## Logs Store Location
 - [x] Text File
@@ -28,8 +28,7 @@ Example: `LogClicker.shared.logsStoreLocation = .printAndDatabase`
 - Get all logs.
 `LogClicker.shared.getAllLogs()`
 
-## Features:
-- [ ] Upload report file to URL. (Adding soon)
+## Logs DB Management:
 - [x] Reset log history.
 `LogClicker.shared.resetLogs(location: <#T##LogsStoreLocation#>)`
 
@@ -38,7 +37,21 @@ Example: `LogClicker.shared.logsStoreLocation = .printAndDatabase`
 
 - [ ] Max File Size (Adding soon)
 - [ ] Reset after every 7 days (Adding soon)
+
+## Sharing Logs
+- [x] Get logs database
+    ```if let db_url = LogClicker.shared.DB_LOG_FILE_URL{
+    print(db_url)
+    }```
+
+- [x] Get logs textfile
+    ```if let db_url = LogClicker.shared.TEXT_LOG_FILE_URL{
+    print(db_url)
+    }```
+    
+- [ ] Upload report file to URL. (Adding soon)
 - [ ] File name (Adding soon)
+
 
 ## Filters:
 - FirstSeen
@@ -47,33 +60,33 @@ Example: `LogClicker.shared.logsStoreLocation = .printAndDatabase`
 - UniqueIPsAffected
 
 ## Device Informations:
-- PROJECT NAME
-- BUNDLE ID
-- PROJECT VERSION
-- PROJECT BUILD NUMBER
-- DEVICE NAME
-- OS VERSION
-- IP ADDRESS
-- ACCESS TOKEN
+- [x] PROJECT NAME
+- [x] BUNDLE ID
+- [x] PROJECT VERSION
+- [x] PROJECT BUILD NUMBER
+- [x] DEVICE NAME
+- [x] OS VERSION
+- [x] IP ADDRESS
+- [x] ACCESS TOKEN
 
 
 ## Log Type:
-- Info
-- Warning
-- Error
-- Exception
+- [x] Info
+- [x] Warning
+- [x] Error
+- [x] Exception
 
 ## Log Level:
-- Trivial
-- Normal
-- Minor
-- Major
-- Critical
-- Blocker
+- [x] Trivial
+- [x] Normal
+- [x] Minor
+- [x] Major
+- [x] Critical
+- [x] Blocker
 
 ## Priority:
-- P1
-- P2
-- P3
-- P4
-- P5
+- [x] P1
+- [x] P2
+- [x] P3
+- [x] P4
+- [x] P5

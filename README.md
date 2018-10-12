@@ -1,12 +1,12 @@
 # LogClick
 
 ## Functions:
-`Log(info: "This is informations log.")`
-`Log(warning: "This is Warning log.")`
-`Log(error: nil, message: "Error with optional error.")`
-`Log(exception: nil, message: "This is exceptions log.")`
-`Log(error: nil, message: "This is error with more details", level: .Major, priority: .P3)`
-`Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)`
+- `Log(info: "This is informations log.")`
+- `Log(warning: "This is Warning log.")`
+- `Log(error: nil, message: "Error with optional error.")`
+- `Log(exception: nil, message: "This is exceptions log.")`
+- `Log(error: nil, message: "This is error with more details", level: .Major, priority: .P3)`
+- `Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)`
 
 ## Logs Store Location
 - [x] Text File

@@ -29,6 +29,8 @@ class ViewController: UIViewController {
         
         let logs = LogClicker.shared.getLogs(whereKeys: [WhereKey.LEVEL : IssueLevel.Blocker.rawValue, WhereKey.OS_VERSION:"11.4.1"])
         print(logs)
+        
+        
     }
 
     override func didReceiveMemoryWarning() {

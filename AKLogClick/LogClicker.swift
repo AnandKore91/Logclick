@@ -351,25 +351,6 @@ extension LogClicker{
         let result = fetchData(query: whereKeyString)
         print(result)
     }
-    /*
-     LOG_DATE
-     LOG_TYPE
-     LEVEL
-     PRIORITY
-     
-     FILE_NAME
-     ITEM
-     ENVIRONMENT
-     DeviceID
-     DEVICE_NAME
-     OS_VERSION
-     IP_ADDRESS
-     ACCESS_TOKEN
-     BUNDLE_ID
-     PROJECT_NAME
-     PROJECT_VERSION
-     PROJECT_BUILD_NUMBER
-     */
     
     public func getLogs(fromDate:Date, toDate:Date, location:LogsStoreLocation)-> [[String:Any]]{
         let dateformater = DateFormatter()

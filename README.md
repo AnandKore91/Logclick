@@ -57,10 +57,10 @@ print(db_url)
 
 
 ## Filters:
-- FirstSeen
-- LastSeen
-- TotalOccurrences:level:priority:type
-- UniqueIPsAffected
+- [x] FirstSeen
+- [x] LastSeen
+- [ ] TotalOccurrences:level:priority:type
+- [ ] UniqueIPsAffected
 
 ## Device Informations:
 - [x] PROJECT NAME

@@ -8,6 +8,11 @@
 - `Log(error: nil, message: "This is error with more details", level: .Major, priority: .P3)`
 - `Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)`
 
+Output Sample:
+```
+[["LOG_DATE": 2018-10-295 14:10:99.997, "BUNDLE_ID": com.sample.MyApp, "ENVIRONMENT": Default, "LEVEL": Blocker, "ID": 16, "LOG_TYPE": [Severe 🔥], "PROJECT_VERSION": 1.0, "OS_VERSION": 12.0, "ITEM": This is exception with more details, "DEVICE_NAME": iPhone, "ACCESS_TOKEN": , "PRIORITY": P1, "IP_ADDRESS": 10.0.1.13, "PROJECT_BUILD_NUMBER": 1, "PROJECT_NAME": MyApp, "DeviceID": 52193994-2CAA-4C6B-8F92-72B7538607EF, "FILE_NAME": ViewController.swift]]
+```
+
 ## Logs Store Location
 - [x] Text File
 - [x] Database
@@ -16,14 +21,20 @@
 - [x] Print and Database
 - [x] Text file and Database
 
-Example: `LogClicker.shared.logsStoreLocation = .printAndDatabase`
+Example: 
+```
+LogClicker.shared.logsStoreLocation = .printAndDatabase
+```
 
 ## Log Getters
 - Get logs from date - to date .  [Returns array of dictionary.]
-`LogClicker.shared.getLogs(fromDate: <#T##Date#>, toDate: <#T##Date#>, location: <#T##LogsStoreLocation#>)`
-
+```
+LogClicker.shared.getLogs(fromDate: <#T##Date#>, toDate: <#T##Date#>, location: <#T##LogsStoreLocation#>)
+```
 - Get logs with where clause.
-`LogClicker.shared.getLogs(whereKeys: [WhereKey.LEVEL : IssueLevel.Blocker.rawValue, WhereKey.OS_VERSION:"11.4.1"])`
+```
+LogClicker.shared.getLogs(whereKeys: [WhereKey.LEVEL : IssueLevel.Blocker.rawValue, WhereKey.OS_VERSION:"11.4.1"])
+```
 
 - Get all logs.
 `LogClicker.shared.getAllLogs()`

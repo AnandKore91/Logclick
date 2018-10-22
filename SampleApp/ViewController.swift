@@ -37,7 +37,10 @@ class ViewController: UIViewController {
         print(LogClicker.shared.lastSeen(whereKeys: [WhereKey.LEVEL: IssueLevel.Blocker.rawValue]) ?? "")
         print(LogClicker.shared.lastSeen(whereKeys: [WhereKey.LOG_TYPE: LogType.tSevere.rawValue]) ?? "")
         
-        
+        if let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()){
+            let reseted:Bool =  LogClicker.shared.resetLogs(olderThanDate: yesterday)
+            print(reseted)
+        }
     }
 
     override func didReceiveMemoryWarning() {

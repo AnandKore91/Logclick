@@ -325,9 +325,11 @@ extension LogClicker{
     }
     
     public func resetLogs(fromDate:Date, toDate:Date, location:LogsStoreLocation)->Bool{
-        let dateformater = DateFormatter()
-        dateformater.dateFormat = "dd-MM-yy"
-        return executeUpdate(query: "DELETE FROM tblLogClicker WHERE LOG_DATE BETWEEN '\(dateformater.string(from: fromDate))'  AND '\(dateformater.string(from: toDate))'")
+        return executeUpdate(query: "DELETE FROM tblLogClicker WHERE LOG_DATE BETWEEN '\(fromDate.toString())'  AND '\(toDate.toString())'")
+    }
+    
+    public func resetLogs(olderThanDate:Date)->Bool{
+        return executeUpdate(query: "DELETE FROM tblLogClicker WHERE LOG_DATE > '\(olderThanDate.toString())'")
     }
 }
 

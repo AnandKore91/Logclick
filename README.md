@@ -50,6 +50,13 @@ LogClicker.shared.resetLogs(fromDate: <#T##Date#>, toDate: <#T##Date#>, location
 ```
 - [ ] Max File Size (Adding soon)
 - [ ] Reset after every 7 days (Adding soon)
+```
+if let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()){
+    let reseted:Bool =  LogClicker.shared.resetLogs(olderThanDate: yesterday)
+    print(reseted)
+}
+```
+
 
 ## Sharing Logs
 - [x] Get logs database
@@ -61,7 +68,7 @@ if let db_url = LogClicker.shared.DB_LOG_FILE_URL{
 - [x] Get logs textfile
 ```
 if let db_url = LogClicker.shared.TEXT_LOG_FILE_URL{
-print(db_url)
+    print(db_url)
 }
 ```
     

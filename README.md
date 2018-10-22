@@ -58,7 +58,15 @@ print(db_url)
 
 ## Filters:
 - [x] FirstSeen
+```
+print(LogClicker.shared.firstSeen(whereKeys: [WhereKey.LEVEL: IssueLevel.Blocker.rawValue]) ?? "")
+print(LogClicker.shared.firstSeen(whereKeys: [WhereKey.LOG_TYPE: LogType.tSevere.rawValue]) ?? "")
+```
 - [x] LastSeen
+```
+print(LogClicker.shared.lastSeen(whereKeys: [WhereKey.LEVEL: IssueLevel.Blocker.rawValue]) ?? "")
+print(LogClicker.shared.lastSeen(whereKeys: [WhereKey.LOG_TYPE: LogType.tSevere.rawValue]) ?? "")
+```
 - [ ] TotalOccurrences:level:priority:type
 - [ ] UniqueIPsAffected
 

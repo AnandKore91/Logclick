@@ -1,25 +1,25 @@
 ![Logclick](https://github.com/AnandKore91/LogClick/blob/master/logclick.png)
 
 ## Functions:
-*Quickly spot problems at runtime in the Xcode console, where log messages are color coded by severity:*
+*Quickly spot :eyes: problems at runtime in the Xcode console, where log messages are color :rainbow: coded by severity:*
 
-- `Log(info: "This is informations log.")`
-- `Log(warning: "This is Warning log.")`
-- `Log(error: nil, message: "Error with optional error.")`
-- `Log(exception: nil, message: "This is exceptions log.")`
-- `Log(error: nil, message: "This is error with more details", level: .Major, priority: .P3)`
-- `Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)`
+- :information_source: `Log(info: "This is informations log.")`
+- :warning: `Log(warning: "This is Warning log.")`
+- :heavy_exclamation_mark: `Log(error: nil, message: "Error with optional error.")`
+- :bangbang: `Log(exception: nil, message: "This is exceptions log.")`
+- :heavy_exclamation_mark: `Log(error: nil, message: "This is error with more details", level: .Major, priority: .P3)`
+- :bangbang: `Log(exception: nil, message: "This is exception with more details", level: .Blocker, priority: .P1)`
 
 Sample Output:
 ```
 [["LOG_DATE": 2018-10-295 14:10:99.997, "BUNDLE_ID": com.sample.MyApp, "ENVIRONMENT": Default, "LEVEL": Blocker, "ID": 16, "LOG_TYPE": [Severe 🔥], "PROJECT_VERSION": 1.0, "OS_VERSION": 12.0, "ITEM": This is exception with more details, "DEVICE_NAME": iPhone, "ACCESS_TOKEN": , "PRIORITY": P1, "IP_ADDRESS": 10.0.1.13, "PROJECT_BUILD_NUMBER": 1, "PROJECT_NAME": MyApp, "DeviceID": 52193994-2CAA-4C6B-8F92-72B7538607EF, "FILE_NAME": ViewController.swift]]
 ```
 
-## Logs Store Location
+## Logs Store Location :cloud:
 *You can store logs into the database, textfile or you can choose print only or both.*
 
-- [x] Text File
-- [x] Database
+- [x] :bookmark_tabs: Text File
+- [x] :file_folder: Database
 - [x] Print only
 - [x] Print and Text File
 - [x] Print and Database
@@ -33,21 +33,21 @@ LogClicker.shared.logsStoreLocation = .printAndDatabase
 ## Log Getters
 *Fetch all logs, fetch between dates or even you can fetch with `where` clauses.*
 
-- Get logs from date - to date .  [Returns array of dictionary.]
+- :calendar: Get logs from date - to date .  [Returns array of dictionary.]
 ```
 LogClicker.shared.getLogs(fromDate: <#T##Date#>, toDate: <#T##Date#>, location: <#T##LogsStoreLocation#>)
 ```
 
-- Get logs with where clause.
+- :mag: Get logs with where clause.
 ```
 LogClicker.shared.getLogs(whereKeys: [WhereKey.LEVEL : IssueLevel.Blocker.rawValue, WhereKey.OS_VERSION:"11.4.1"])
 ```
 
-- Get all logs.
+- :mag: Get all logs.
 `LogClicker.shared.getAllLogs()`
 
 
-## Logs DB Management:
+## Logs DB Management: :construction_worker:
 *Manage the log database with helper functions. You can reset complete logs, reset logs into between two dates or logs older than specific date.*
 
 - [x] Reset log history.
@@ -101,7 +101,7 @@ if let db_url = LogClicker.shared.TEXT_LOG_FILE_URL{
 - [ ] File name (Adding soon)
 
 
-## Filters:
+## Filters: :mag:
 *Best thing of Logclicker is that you can see when the specific issue was first seen or last seen with super easy functions.*
 
 - [x] FirstSeen
@@ -119,7 +119,7 @@ print(LogClicker.shared.lastSeen(whereKeys: [WhereKey.LOG_TYPE: LogType.tSevere.
 - [ ] TotalOccurrences:level:priority:type
 - [ ] UniqueIPsAffected
 
-## Device Informations:
+## Device Informations: :information_source:
 *Get device information, on which logs are recorded with full details.*
 
 - [x] PROJECT NAME

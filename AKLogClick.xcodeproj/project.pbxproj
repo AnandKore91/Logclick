@@ -75,8 +75,7 @@
 			children = (
 				0CBA0806214688B50058C4F5 /* README.md */,
 				0C1B9EE91FA0A0B200C8A9A2 /* LogClicker.swift */,
-				0CBA08052146888A0058C4F5 /* Extentions */,
-				0C597374217DE6D2005A0B51 /* Utility.swift */,
+				0CBA08052146888A0058C4F5 /* Helpers */,
 			);
 			path = AKLogClick;
 			sourceTree = "<group>";
@@ -102,12 +101,13 @@
 			path = SampleApp;
 			sourceTree = "<group>";
 		};
-		0CBA08052146888A0058C4F5 /* Extentions */ = {
+		0CBA08052146888A0058C4F5 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				0C1CF5791FA1B7F20051E8BA /* AKLogClickExtensions.swift */,
+				0C597374217DE6D2005A0B51 /* Utility.swift */,
 			);
-			path = Extentions;
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		1F85D4BDDC01CE9577576299 /* Pods */ = {

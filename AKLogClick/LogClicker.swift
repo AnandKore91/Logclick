@@ -328,8 +328,8 @@ extension LogClicker{
         return executeUpdate(query: "DELETE FROM tblLogClicker WHERE LOG_DATE BETWEEN '\(fromDate.toString())'  AND '\(toDate.toString())'")
     }
     
-    public func resetLogs(olderThanDate:Date)->Bool{
-        return executeUpdate(query: "DELETE FROM tblLogClicker WHERE LOG_DATE > '\(olderThanDate.toString())'")
+    public func resetLogs(olderThan date:Date)->Bool{
+        return executeUpdate(query: "DELETE FROM tblLogClicker WHERE LOG_DATE > '\(date.toString())'")
     }
 }
 

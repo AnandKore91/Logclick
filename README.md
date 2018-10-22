@@ -49,10 +49,10 @@ LogClicker.shared.resetLogs(location: <#T##LogsStoreLocation#>)
 LogClicker.shared.resetLogs(fromDate: <#T##Date#>, toDate: <#T##Date#>, location: <#T##LogsStoreLocation#>)
 ```
 - [ ] Max File Size (Adding soon)
-- [ ] Reset after every 7 days (Adding soon)
+- [x] Reset after every 7 days (Adding soon)
 ```
 if let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()){
-    let reseted:Bool =  LogClicker.shared.resetLogs(olderThanDate: yesterday)
+    let reseted:Bool =  LogClicker.shared.resetLogs(olderThan: yesterday)
     print(reseted)
 }
 ```

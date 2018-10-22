@@ -14,7 +14,12 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         LogClicker.shared.logsStoreLocation = .printAndDatabase
-    
+        LogClicker.shared.maxDBFileSize =  5000000 //--- 5 MB
+        print("Max file size: \(LogClicker.shared.maxDBFileSize)")
+        print("Current file size: \(LogClicker.shared.currentLogTextFileSize)")
+        
+        
+        
         Log(info: "This is informations log.")
         Log(warning: "This is Warning log.")
         Log(error: nil, message: "Error with optional error.")
@@ -41,6 +46,8 @@ class ViewController: UIViewController {
             let reseted:Bool =  LogClicker.shared.resetLogs(olderThan: yesterday)
             print(reseted)
         }
+        
+        
     }
 
     override func didReceiveMemoryWarning() {

@@ -115,7 +115,42 @@ public class LogClicker
     public static var shared:LogClicker = LogClicker()
     
     //MARK: Public Variables
+    /** Logs location. */
     public var logsStoreLocation:LogsStoreLocation = .database
+    
+    /** Maximum logs file size. */
+    public var maxDBFileSize:Double{
+        set(newMaxDBFileSize){
+            if newMaxDBFileSize > 0 {
+                UserDefaults.standard.set(newMaxDBFileSize, forKey: "MAX_FILE_SIZE")
+                UserDefaults.standard.synchronize()
+                
+                _ = LogClicker.shared.deleteLogFile(greaterThan: newMaxDBFileSize)
+            }
+        }
+        get{
+            if let maxSize:Double = UserDefaults.standard.value(forKey: "MAX_FILE_SIZE") as? Double {
+                return maxSize
+            }
+            else{
+                UserDefaults.standard.set(5000000, forKey: "MAX_FILE_SIZE") //-- Default 5 MB
+                UserDefaults.standard.synchronize()
+            }
+            return 5000000
+        }
+    }
+    
+    public var currentLogDBFileSize:Double{
+        get{
+            return  Utility.getFileSizeInMB(url: DB_LOG_FILE_URL)
+        }
+    }
+    public var currentLogTextFileSize:Double{
+        get{
+            return  Utility.getFileSizeInMB(url: TEXT_LOG_FILE_URL)
+        }
+    }
+    
     
     //MARK: Private Variables
     private let projectName:String?
@@ -129,7 +164,7 @@ public class LogClicker
     private let accessToken:String?
     
     private var logger:Logger = Logger()
-    private let database:FMDatabase?
+    private var database:FMDatabase?
     
     public var TEXT_LOG_FILE_URL:URL?{
         get{
@@ -178,6 +213,21 @@ public class LogClicker
         else{
             print("Failed to create file.")
             self.database  = FMDatabase()
+        }
+        
+        //--- Validate max log file size.
+        if let maxSize:Double = UserDefaults.standard.value(forKey: "MAX_FILE_SIZE") as? Double {
+            let isDeleted:Bool = deleteLogFile(greaterThan: maxSize)
+            if isDeleted{
+                if let fileURL = LogClicker.getFileURLfor(fileName: LOG_DATABASE_FILE_NAME, createIfNotExist: true){
+                    self.database = FMDatabase(url: fileURL)
+                    self.createTableIfNotExist()
+                }
+                else{
+                    print("Failed to create file.")
+                    self.database  = FMDatabase()
+                }
+            }
         }
     }
     
@@ -259,6 +309,17 @@ public class LogClicker
         }
     }
 
+    fileprivate func deleteLogFile(greaterThan maxSize:Double) -> Bool{
+        if Utility.getFileSizeInMB(url: TEXT_LOG_FILE_URL) > maxSize{
+            return Utility.deleteFile(url: TEXT_LOG_FILE_URL)
+        }
+        
+        print("\(Utility.getFileSizeInMB(url: DB_LOG_FILE_URL))")
+        if Utility.getFileSizeInMB(url: DB_LOG_FILE_URL) > maxSize{
+            return Utility.deleteFile(url: DB_LOG_FILE_URL)
+        }
+        return false
+    }
     
 }
 
@@ -299,8 +360,8 @@ extension LogClicker{
                 do{
                     try FileManager.default.removeItem(at: fileURL)
                 }
-                catch{
-                    print("Unable to reset logs.")
+                catch let error{
+                    print("Unable to reset logs.\(error.localizedDescription)")
                     return false
                 }
             }

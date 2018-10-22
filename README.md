@@ -30,11 +30,13 @@ Example: `LogClicker.shared.logsStoreLocation = .printAndDatabase`
 
 ## Logs DB Management:
 - [x] Reset log history.
-`LogClicker.shared.resetLogs(location: <#T##LogsStoreLocation#>)`
-
+```
+LogClicker.shared.resetLogs(location: <#T##LogsStoreLocation#>)
+```
 - [x] Reset logs from date: to date:
-`LogClicker.shared.resetLogs(fromDate: <#T##Date#>, toDate: <#T##Date#>, location: <#T##LogsStoreLocation#>)`
-
+```
+LogClicker.shared.resetLogs(fromDate: <#T##Date#>, toDate: <#T##Date#>, location: <#T##LogsStoreLocation#>)
+```
 - [ ] Max File Size (Adding soon)
 - [ ] Reset after every 7 days (Adding soon)
 

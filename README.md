@@ -56,7 +56,7 @@ if let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()){
 }
 ```
 - [x] Max File Size (Setter): 
-Automatically deletes the log file is maxvalue exceeds.
+Automatically deletes the log file if `LogClicker.shared.currentLogDBFileSize` exceeds `LogClicker.shared.maxDBFileSize`.
 ```
 LogClicker.shared.maxDBFileSize =  5000000 //--- 5 MB
 ```

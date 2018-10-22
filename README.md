@@ -1,4 +1,4 @@
-# LogClick
+![Logclick](https://github.com/AnandKore91/LogClick/blob/master/logclick.png)
 
 ## Functions:
 - `Log(info: "This is informations log.")`
@@ -46,9 +46,11 @@ if let db_url = LogClicker.shared.DB_LOG_FILE_URL{
 }
 ```
 - [x] Get logs textfile
-    ```if let db_url = LogClicker.shared.TEXT_LOG_FILE_URL{
-    print(db_url)
-    }
+```
+if let db_url = LogClicker.shared.TEXT_LOG_FILE_URL{
+print(db_url)
+}
+```
     
 - [ ] Upload report file to URL. (Adding soon)
 - [ ] File name (Adding soon)

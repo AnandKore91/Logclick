@@ -27,8 +27,15 @@ class ViewController: UIViewController {
         }
         
         
-        let logs = LogClicker.shared.getLogs(whereKeys: [WhereKey.LEVEL : IssueLevel.Blocker.rawValue, WhereKey.OS_VERSION:"11.4.1"])
+        let logs = LogClicker.shared.getLogs(whereKeys: [WhereKey.LEVEL : IssueLevel.Blocker.rawValue, WhereKey.OS_VERSION:"12.0"], limit:10)
         print(logs)
+        print("\n\n\n\n\n\n\n")
+        
+        print(LogClicker.shared.firstSeen(whereKeys: [WhereKey.LEVEL: IssueLevel.Blocker.rawValue]) ?? "")
+        print(LogClicker.shared.firstSeen(whereKeys: [WhereKey.LOG_TYPE: LogType.tSevere.rawValue]) ?? "")
+        
+        print(LogClicker.shared.lastSeen(whereKeys: [WhereKey.LEVEL: IssueLevel.Blocker.rawValue]) ?? "")
+        print(LogClicker.shared.lastSeen(whereKeys: [WhereKey.LOG_TYPE: LogType.tSevere.rawValue]) ?? "")
         
         
     }

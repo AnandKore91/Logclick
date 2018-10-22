@@ -337,26 +337,72 @@ extension LogClicker{
         return fetchData(query: "SELECT * FROM tblLogClicker")
     }
     
-    public func getLogs(whereKeys:[WhereKey:String]!){
+    public func getLogs(whereKeys:[WhereKey:String]?, limit:Int?)->[[String:Any]]{
         var whereKeyArray = [String]()
-        for (key, value) in whereKeys{
-            whereKeyArray.append("\(key.rawValue) = '\(value)'")
+        var whereKeyString:String?
+        if let whereKeys = whereKeys{
+            for (key, value) in whereKeys{
+                whereKeyArray.append("\(key.rawValue) = '\(value)'")
+            }
+            whereKeyString = "SELECT * FROM tblLogClicker WHERE \(whereKeyArray.joined(separator: " AND "))"
+        }
+        else{
+            whereKeyString = "SELECT * FROM tblLogClicker"
+        }
+       
+        if let limit = limit, var whereKeyString = whereKeyString{
+            whereKeyString = "\(whereKeyString) LIMIT \(limit)"
         }
         
+        print("\(String(describing: whereKeyString))")
         
-        let whereKeyString = "SELECT * FROM tblLogClicker WHERE \(whereKeyArray.joined(separator: " AND "))"
-        
-        print("\(whereKeyString)")
-        
-        let result = fetchData(query: whereKeyString)
-        print(result)
+        let result = fetchData(query: whereKeyString ?? "SELECT * FROM tblLogClicker")
+        return result
     }
     
     public func getLogs(fromDate:Date, toDate:Date, location:LogsStoreLocation)-> [[String:Any]]{
-        let dateformater = DateFormatter()
-        dateformater.dateFormat = "dd-MM-yy"
-        return fetchData(query: "SELECT * FROM tblLogClicker WHERE LOG_DATE BETWEEN '\(dateformater.string(from: fromDate))'  AND '\(dateformater.string(from: toDate))'")
+        return fetchData(query: "SELECT * FROM tblLogClicker WHERE LOG_DATE BETWEEN '\(fromDate.toString())'  AND '\(toDate.toString())'")
     }
+    
+    //MARK: First and Last Seen
+    public func firstSeen(whereKeys:[WhereKey:String]!)->[[String:Any]]?{
+        return seen(whereKeys: whereKeys, first: true)
+    }
+    
+    public func lastSeen(whereKeys:[WhereKey:String]!)->[[String:Any]]?{
+        return seen(whereKeys: whereKeys, first: false)
+    }
+    
+    private func seen(whereKeys:[WhereKey:String]!, first:Bool)->[[String:Any]]?{
+        var whereKeyArray = [String]()
+        var whereKeyString:String?
+        if let whereKeys = whereKeys{
+            for (key, value) in whereKeys{
+                whereKeyArray.append("\(key.rawValue) = '\(value)'")
+            }
+            whereKeyString = "SELECT * FROM tblLogClicker WHERE \(whereKeyArray.joined(separator: " AND "))"
+        }
+        else{
+            whereKeyString = "SELECT * FROM tblLogClicker"
+        }
+        
+        if var whereKeyString = whereKeyString{
+            print("\(whereKeyString)")
+            
+            if first {
+                whereKeyString = "\(whereKeyString) ORDER BY LOG_DATE LIMIT 1"
+            }
+            else{
+                whereKeyString = "\(whereKeyString) ORDER BY LOG_DATE DESC LIMIT 1"
+            }
+            
+            let result = fetchData(query: whereKeyString)
+            return result
+        }
+        
+        return nil
+    }
+    
 }
 
 //MARK:- DB Function
@@ -369,7 +415,7 @@ extension LogClicker{
             }
             
             do {
-                let create_tbl_query = "CREATE TABLE IF NOT EXISTS tblLogClicker(ID INTEGER PRIMARY KEY autoincrement, LOG_DATE text, FILE_NAME text, ITEM text, LOG_TYPE text, LEVEL text, PRIORITY text, ENVIRONMENT text, DeviceID text, DEVICE_NAME text, OS_VERSION text, IP_ADDRESS text, ACCESS_TOKEN text, BUNDLE_ID text, PROJECT_NAME text, PROJECT_VERSION text, PROJECT_BUILD_NUMBER text)"
+                let create_tbl_query = "CREATE TABLE IF NOT EXISTS tblLogClicker(ID INTEGER PRIMARY KEY autoincrement, LOG_DATE datetime, FILE_NAME text, ITEM text, LOG_TYPE text, LEVEL text, PRIORITY text, ENVIRONMENT text, DeviceID text, DEVICE_NAME text, OS_VERSION text, IP_ADDRESS text, ACCESS_TOKEN text, BUNDLE_ID text, PROJECT_NAME text, PROJECT_VERSION text, PROJECT_BUILD_NUMBER text)"
                 try database.executeUpdate(create_tbl_query, values: nil)
             } catch {
                 print("failed: \(error.localizedDescription)")
